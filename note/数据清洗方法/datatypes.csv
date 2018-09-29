@@ -1,0 +1,14 @@
+feature,type
+Loan_ID,categorical
+Gender,categorical
+Married,categorical
+Dependents,categorical
+Education,categorical
+Self_Employed,categorical
+ApplicantIncome,continuous
+CoapplicantIncome,continuous
+LoanAmount,continuous
+Loan_Amount_Term,continuous
+Credit_History,categorical
+Property_Area,categorical
+Loan_Status,categorical
