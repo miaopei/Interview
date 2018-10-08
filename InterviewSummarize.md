@@ -3,7 +3,7 @@ Index
 <!-- TOC -->
 
 - [1. 梯度爆炸的解决办法***](#梯度爆炸的解决办法)
-- [14. 批标准化（Batch Normalization）的意义**](#批标准化(Batch Normalization)的意义)
+- [14. 批标准化（Batch Normalization）的意义**](#批标准化-Batch Normalization-的意义)
 
 <!-- /TOC -->
 
