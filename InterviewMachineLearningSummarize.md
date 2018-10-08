@@ -1,3 +1,7 @@
+# Interview MachineLearning Summarize
+
+## Index
+
 <!-- TOC -->
 
 * [1. 梯度爆炸的解决办法***](#1-梯度爆炸的解决办法)
@@ -211,8 +215,6 @@ BN 算法需要学习两个参数 γ 和 β.
 
 - [那些深度学习《面试》你可能需要知道的](https://zhuanlan.zhihu.com/p/29965072) - 知乎
 
-
-
 ### 机器学习
 
 - [详解机器学习中的梯度消失、爆炸原因及其解决方法](https://blog.csdn.net/qq_25737169/article/details/78847691) - CSDN
@@ -230,21 +232,9 @@ BN 算法需要学习两个参数 γ 和 β.
 - [DeepLearning学习笔记——无监督学习算法](https://blog.csdn.net/hustqb/article/details/77234949) - CSDN
 - [深度学习之概述(Overview)](https://juejin.im/entry/59ddf2006fb9a04509087bcf) - 掘金
 
-### Python
-
-- [2018年最常见的Python面试题&答案（上篇）](https://juejin.im/post/5b6bc1d16fb9a04f9c43edc3)
-- []()
-- []()
-
-### C++
-
-- []()
-
 ### 其他
 
 - [快速生成Github README.md的目录](http://blog.sciencenet.cn/blog-3247241-1104736.html)
 
-
-
-
+  
 
