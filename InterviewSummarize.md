@@ -1,9 +1,28 @@
-Index
----
 <!-- TOC -->
 
-- [1. 梯度爆炸的解决办法***](#1. 梯度爆炸的解决办法)
-- [14. 批标准化（Batch Normalization）的意义**](#14. 批标准化-Batch-Normalization-的意义)
+* [1. 梯度爆炸的解决办法***](#1-梯度爆炸的解决办法)
+* [2. 神经网络（MLP）的万能近似定理*](#2-神经网络mlp的万能近似定理)
+* [3. 神经网络中，深度与宽度的关系，及其表示能力的差异**](#3-神经网络中深度与宽度的关系及其表示能力的差异)
+* [4. 在深度神经网络中，引入了隐藏层（非线性单元），放弃了训练问题的凸性，其意义何在？**](#4-在深度神经网络中引入了隐藏层非线性单元放弃了训练问题的凸性其意义何在)
+* [5. 为什么交叉熵损失相比均方误差损失能提高以 sigmoid 和 softmax 作为激活函数的层的性能？**](#5-为什么交叉熵损失相比均方误差损失能提高以-sigmoid-和-softmax-作为激活函数的层的性能)
+* [6. 分段线性单元（如 ReLU）代替 sigmoid 的利弊***](#6-分段线性单元如-relu代替-sigmoid-的利弊)
+* [7. 在做正则化过程中，为什么只对权重做正则惩罚，而不对偏置做权重惩罚*](#7-在做正则化过程中为什么只对权重做正则惩罚而不对偏置做权重惩罚)
+* [8. 列举常见的一些范数及其应用场景，如 L0、L1、L2、L∞、Frobenius等范数**](#8-列举常见的一些范数及其应用场景如-l0l1l2lfrobenius等范数)
+* [9. L1 和 L2 范数的异同***](#9-l1-和-l2-范数的异同)
+* [10. 简单介绍常用的激活函数，如 sigmoid、relu、softplus、tanh、RBF 及其应用场景***](#10-简单介绍常用的激活函数如-sigmoidrelusoftplustanhrbf-及其应用场景)
+* [11. 训练误差、泛化误差；过拟合、欠拟合；模型容量，表示容量，有效容量，最优容量的概念； 奥卡姆剃刀原则*](#11-训练误差泛化误差过拟合欠拟合模型容量表示容量有效容量最优容量的概念-奥卡姆剃刀原则)
+  * [11.1 过拟合的一些解决方案***](#111-过拟合的一些解决方案)
+* [12. 高斯分布的广泛应用的原因**](#12-高斯分布的广泛应用的原因)
+* [13. Dropout 与 Bagging 集成方法的关系，Dropout 带来的意义与其强大的原因***](#13-dropout-与-bagging-集成方法的关系dropout-带来的意义与其强大的原因)
+* [14. 批标准化（Batch Normalization）的意义**](#14-批标准化batch-normalization的意义)
+* [Reference](#reference)
+  * [数学公式html生成器](#数学公式html生成器)
+  * [Interview Link](#interview-link)
+  * [机器学习](#机器学习)
+  * [深度学习](#深度学习)
+  * [Python](#python)
+  * [C  ](#c)
+  * [其他](#其他)
 
 <!-- /TOC -->
 
@@ -78,19 +97,19 @@ Index
 
 ## 8. 列举常见的一些范数及其应用场景，如 L0、L1、L2、L∞、Frobenius等范数**
 
-$L_0$：向量中非零向量的个数
+<a href="https://www.codecogs.com/eqnedit.php?latex=L_0" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L_0" title="L_0" /></a>：向量中非零向量的个数
 
-$L_1$：向量中所有元素的绝对值之和
+<a href="https://www.codecogs.com/eqnedit.php?latex=L_1" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L_1" title="L_1" /></a>：向量中所有元素的绝对值之和
 
-$$|x|_1 = \sum_{i}|x_i|$$
+<a href="https://www.codecogs.com/eqnedit.php?latex=|x|_1&space;=&space;\sum_{i}|x_i|" target="_blank"><img src="https://latex.codecogs.com/gif.latex?|x|_1&space;=&space;\sum_{i}|x_i|" title="|x|_1 = \sum_{i}|x_i|" /></a>
 
-$L_2$：向量中所有元素的平方和的开方
+<a href="https://www.codecogs.com/eqnedit.php?latex=L_2" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L_2" title="L_2" /></a>：向量中所有元素的平方和的开方
 
-$$||x||_2 = \sqrt{\sum_{i}|x_i|^2}$$
+<a href="https://www.codecogs.com/eqnedit.php?latex=||x||_2&space;=&space;\sqrt{\sum_{i}|x_i|^2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?||x||_2&space;=&space;\sqrt{\sum_{i}|x_i|^2}" title="||x||_2 = \sqrt{\sum_{i}|x_i|^2}" /></a>
 
 其中 L1 和 L2 范数分别是 Lp (p>=1) 范数的特例：
 
-$$||x||_p = (\sum_{i}|x_i|^p)^ \frac{1}{p}$$
+<a href="https://www.codecogs.com/eqnedit.php?latex=||x||_p&space;=&space;(\sum_{i}|x_i|^p)^&space;\frac{1}{p}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?||x||_p&space;=&space;(\sum_{i}|x_i|^p)^&space;\frac{1}{p}" title="||x||_p = (\sum_{i}|x_i|^p)^ \frac{1}{p}" /></a>
 
 **范数的应用**：
 
@@ -133,7 +152,7 @@ $$||x||_p = (\sum_{i}|x_i|^p)^ \frac{1}{p}$$
 
 高斯分布，即正态分布（normal distribution）：
 
-$$N(x; \mu, \sigma ^2) = \sqrt{\frac{1}{2 \pi \sigma ^2}} exp(- \frac{1}{2 \sigma ^2}(x - \mu)^2)$$
+<div align="center"><a href="https://www.codecogs.com/eqnedit.php?latex=N(x;&space;\mu,&space;\sigma&space;^2)&space;=&space;\sqrt{\frac{1}{2&space;\pi&space;\sigma&space;^2}}&space;exp(-&space;\frac{1}{2&space;\sigma&space;^2}(x&space;-&space;\mu)^2)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?N(x;&space;\mu,&space;\sigma&space;^2)&space;=&space;\sqrt{\frac{1}{2&space;\pi&space;\sigma&space;^2}}&space;exp(-&space;\frac{1}{2&space;\sigma&space;^2}(x&space;-&space;\mu)^2)" title="N(x; \mu, \sigma ^2) = \sqrt{\frac{1}{2 \pi \sigma ^2}} exp(- \frac{1}{2 \sigma ^2}(x - \mu)^2)" /></a></div>
 
 概率密度函数图像：
 
@@ -182,20 +201,6 @@ BN 算法需要学习两个参数 γ 和 β.
 
 
 
-
-
-
-
-
-
-
-
-数学公式：
-
-<div align="center"><a href="https://www.codecogs.com/eqnedit.php?latex=ax^{2}&space;&plus;&space;by^{2}&space;&plus;&space;c&space;=&space;0" target="_blank"><img src="https://latex.codecogs.com/gif.latex?ax^{2}&space;&plus;&space;by^{2}&space;&plus;&space;c&space;=&space;0" title="ax^{2} + by^{2} + c = 0" /></a></div>
-
-<a href="https://www.codecogs.com/eqnedit.php?latex=ax^{2}&space;&plus;&space;by^{2}&space;&plus;&space;c&space;=&space;0" target="_blank"><img src="https://latex.codecogs.com/gif.latex?ax^{2}&space;&plus;&space;by^{2}&space;&plus;&space;c&space;=&space;0" title="ax^{2} + by^{2} + c = 0" /></a>
-
 ## Reference
 
 ### 数学公式html生成器
@@ -233,11 +238,11 @@ BN 算法需要学习两个参数 γ 和 β.
 
 ### C++
 
+- []()
 
+### 其他
 
-
-
-
+- [快速生成Github README.md的目录](http://blog.sciencenet.cn/blog-3247241-1104736.html)
 
 
 
