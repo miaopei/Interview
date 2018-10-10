@@ -8,6 +8,12 @@
 
 <!-- /TOC -->
 
+
+
+> - [关于Python的面试题***](https://github.com/miaopei/interview_python)
+
+
+
 ## 1. Python中的闭包
 
 当一个嵌套函数在其外部区域引用了一个值时，该嵌套函数就是一个闭包。其意义就是会记录这个值。 
@@ -212,6 +218,8 @@ Python使用按引用传递（pass-by-reference）将参数传递到函数中。
 - [Python 的闭包和装饰器](https://segmentfault.com/a/1190000004461404) - segmentfault
 
 ### Interview Link
+
+- [关于Python的面试题***](https://github.com/miaopei/interview_python)
 
 - [2018年最常见的Python面试题&答案（上篇）](https://juejin.im/post/5b6bc1d16fb9a04f9c43edc3) - 掘金
 - [2018年最常见的Python面试题&答案（下篇）](https://juejin.im/post/5b8505b6e51d4538884d22bf) - 掘金
