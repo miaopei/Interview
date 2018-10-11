@@ -236,5 +236,4 @@ BN 算法需要学习两个参数 γ 和 β.
 
 - [快速生成Github README.md的目录](http://blog.sciencenet.cn/blog-3247241-1104736.html)
 
-  
 

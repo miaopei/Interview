@@ -471,6 +471,28 @@ PCA算法的主要缺点有：
 
 
 
+## 18. Python numpy，scipy，pandas这些库的区别是什么？
+
+- Numpy是以矩阵为基础的数学计算模块，纯数学。
+
+- Scipy基于Numpy，科学计算库，有一些高阶抽象和物理模型。比方说做个傅立叶变换，这是纯数学的，用Numpy；做个滤波器，这属于信号处理模型了，在Scipy里找。
+
+- Pandas提供了一套名为DataFrame的数据结构，比较契合统计分析中的表结构，并且提供了计算接口，可用Numpy或其它方式进行计算。
+
+> - NumPy：N维数组容器
+>
+> - SciPy：科学计算函数库
+>
+> - Pandas：表格容器
+
+
+
+
+
+
+
+
+
 - 监督学习／迁移学习／半监督学习／弱监督学习／非监督学习？
 - Softmax Loss推一下
 - CNN的特点以及优势 
@@ -734,4 +756,12 @@ PCA算法的主要缺点有：
 - [Gainlo 面试指南](https://wizardforcel.gitbooks.io/gainlo-interview-guide/content/)
 - [常见机器学习面试题](https://blog.csdn.net/xbmatrix/article/details/62056589)
 - [怎么准备自然语言处理和推荐系统这一块的面试?](https://www.zhihu.com/question/26926435)
+
+
+
+
+
+# 波士顿房价预测学习项目笔记
+
+> - [波士顿房价预测学习项目笔记](https://www.cnblogs.com/1xin/p/6689880.html)
 
