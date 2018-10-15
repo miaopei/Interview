@@ -722,17 +722,213 @@ Dropout 训练的集成包括所有从基础网络除去部分单元后形成的
 
 # 便利蜂
 
-- 特征工程做的有哪些？非线性可分的情况怎么处理的？
-- SVM的核函数了解多少？
-- L1与L2区别？L1为啥具有稀疏性？
-- xgboost的原理
-- sigmoid函数的导函数的取值范围是多少？其实就是一元二次方程的y值范围，0-1/4
+## 1. 特征工程做的有哪些？非线性可分的情况怎么处理的？
 
-- Python中协成的概念，即微线程，具体可以看廖雪峰的网站
-- C++中vector增删改的时间复杂度，O(1)，O(n)，O(n)
-- MySQL中索引用的什么数据结构？B-Tree或B+Tree
-- Hash_table的底层是什么实现的？拉链法，数组+链表
-- HBase的列式存储解释
+**类别特征**：
+
+类别特征，表示某个数据点属于某一个类别，或具有某一种类的特性。一列类别特征，默认用**自然数**表示（可以用LabelEncoder将字符串转化为自然数）。
+
+例：颜色、性别、地址、血型、国籍、省、市、邮政编码。
+
+- 自然数编码：默认的编码方式（见上，使用LabelEncoder可以得到），消耗内存小，训练时间快，但是特征的质量不高。
+
+- 热独编码（**One-hot Encoding**）：如果类别特征本身**有顺序**（例：优秀、良好、合格、不合格），那么可以保留单列自然数编码。如果类别特征**没有明显的顺序**（例：红、黄、蓝），则可以使用以下方法：
+
+  [sklearn.preprocessing.OneHotEncoder - scikit-learn 0.18.1 documentation](https://link.zhihu.com/?target=http%3A//scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html)，用于类别特征的**独热编码（One-Hot Encoding）**。运行结果与LabelBinarizer相似，不过在参数以及输入输出的格式上有细微的差别，参见文档。输出的矩阵是稀疏的，含有大量的0。
+
+  统计学中，独热编码的变种还有effects coding、contrast coding、nonsense coding等编码方式，但在数据挖掘中都不常用。
+
+- 聚类编码：和独热编码相比，聚类编码试图充分利用每一列0与1的信息表达能力。聚类编码时一般需要特定的专业知识（domain knowledge），例如ZIP码可以根据精确度分层为ZIP3、ZIP4、ZIP5、ZIP6，然后按层次进行编码。
+
+- 平均数编码（**mean encoding**）：**平均数编码（mean encoding）**，针对**高基数类别特征**的**有监督编码**。当一个类别特征列包括了极多不同类别时（如家庭地址，动辄上万）时，可以采用。优点：和独热编码相比，节省内存、减少算法计算时间、有效增强模型表现。
+
+  [平均数编码：针对高基数类别特征（类别特征）的数据预处理/特征工程 - 知乎专栏](https://zhuanlan.zhihu.com/p/26308272)
+
+- **只出现一次的类别**：在类别特征列里，有时会有一些类别，在训练集和测试集中总共只出现一次，例如特别偏僻的郊区地址。此时，保留其原有的自然数编码意义不大，不如将所有**频数为1**的类别**合并到同一个新的类别下**。
+
+  注意：如果特征列的频数需要被当做一个新的特征加入数据集，请在上述合并**之前**提取出频数特征。
+
+**数值特征**：
+
+**数值特征（numerical feature）**，可以是连续的（continuous），也可以是离散的（discrete），一般表示为一个实数值。
+
+例：年龄、价格、身高、体重、测量数据。
+
+**不同算法对于数值特征的处理要求不同**。下文中的一些数据处理方法（3.2.1、3.2.2、3.2.3），因为是针对某一特征列的单调变换，所以不会对基于决策树的算法（随机森林、gbdt）产生任何影响。一般而言，决策树类算法不需要预处理数值特征。
+
+- **标准化（Standardization）**：[sklearn.preprocessing.StandardScaler - scikit-learn 0.18.1 documentation](https://link.zhihu.com/?target=http%3A//scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html)，转换为Z-score，使数值特征列的算数平均为0，方差（以及标准差）为1。不免疫outlier。
+
+  $x' = \frac{x - \mu}{\sigma}$
+
+  [sklearn.preprocessing.RobustScaler - scikit-learn 0.18.1 documentation](https://link.zhihu.com/?target=http%3A//scikit-learn.org/stable/modules/generated/sklearn.preprocessing.RobustScaler.html)。如果数值特征列中存在数值极大或极小的outlier（通过EDA发现），应该使用更稳健（robust）的统计数据：用中位数而不是算术平均数，用分位数（quantile）而不是方差。这种标准化方法有一个重要的参数：（分位数下限，分位数上限），最好通过EDA的数据可视化确定。免疫outlier。
+
+- **归一化（Normalization）**：[sklearn.preprocessing.Normalizer - scikit-learn 0.18.1 documentation](https://link.zhihu.com/?target=http%3A//scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Normalizer.html)，把每一行数据归一化，使之有unit norm，norm的种类可以选l1、l2或max。不免疫outlier。
+
+- **区间缩放（scaling）**：[sklearn.preprocessing.MaxAbsScaler - scikit-learn 0.18.1 documentation](https://link.zhihu.com/?target=http%3A//scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MaxAbsScaler.html)，将一列的数值，除以这一列的最大绝对值。不免疫outlier。
+
+  $x' = \frac{x}{max(|X|)}$
+
+  [sklearn.preprocessing.MinMaxScaler - scikit-learn 0.18.1 documentation](https://link.zhihu.com/?target=http%3A//scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MinMaxScaler.html)。不免疫outlier。
+
+  $x' = \frac{x - min(X)}{max(X) - min(X)}$
+
+**非线性可分情况**：无法用直线(线性模型)将正负实例正确分开。 
+
+**怎么办？？**
+
+引入核函数，通过一个非线性变换将输入空间对应于一个特征空间，使得在输入空间中的超曲面模型对应于特征空间中的超平面模型(支持向量机)，这样，分类问题的学习任务通过在特征空间中求解线性支持向量机就可以完成。
+
+> - [特征工程到底是什么？](https://www.zhihu.com/question/29316149) - 知乎
+> - [特征工程实用技巧](https://zhuanlan.zhihu.com/p/26444240) - 知乎
+> - [SVM边学边总结系列——非线性可分情况](https://blog.csdn.net/sgfmby1994/article/details/52432828) - CSDN
+> - [机器学习入门教程：Python测试线性可分性的方法](http://www.atyun.com/14182.html)
+
+## 2. SVM的核函数了解多少？
+
+几种常用的核函数来代替自己构造核函数：
+
+- 线性核函数
+- 多项式核函数
+- 高斯（RBF）核函数
+- sigmoid核函数
+
+选择核函数的方法：
+
+- 如果特征的数量大到和样本数量差不多，则选用LR或者线性核的SVM；
+- 如果特征的数量小，样本的数量正常，则选用SVM+高斯核函数；
+- 如果特征的数量小，而样本的数量很大，则需要手工添加一些特征从而变成第一种情况。
+
+**调参：**
+
+| 核函数                               | 公式                                                         | 调参                                                         |
+| ------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| linear kernel                        | ![img](https:////upload-images.jianshu.io/upload_images/1667471-55f50ec52f369bc3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/155/format/webp) |                                                              |
+| Polynomial kernel                    | ![img](https:////upload-images.jianshu.io/upload_images/1667471-9d697255b7ddde54.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/279/format/webp) | -d：多项式核函数的最高次项次数，-g：gamma参数，-r：核函数中的coef0 |
+| Gaussian radial basis function (RBF) | ![img](https:////upload-images.jianshu.io/upload_images/1667471-0370c098adda9e32.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/288/format/webp) | -g：gamma参数，默认值是1/k                                   |
+| Sigmoid kernel                       | ![img](https:////upload-images.jianshu.io/upload_images/1667471-5289e8077925cb8d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/348/format/webp) | -g：gamma参数，-r：核函数中的coef0                           |
+
+其中有两个重要的参数，即 C（惩罚系数） 和 gamma，
+ gamma 越大，支持向量越少，gamma 越小，支持向量越多。
+ 而支持向量的个数影响训练和预测的速度。
+ C 越高，容易过拟合。C 越小，容易欠拟合。
+
+> - [SVM 的核函数选择和调参](https://www.jianshu.com/p/0a24eafda4ff) - 简书
+> - [svm常用核函数](https://blog.csdn.net/batuwuhanpei/article/details/52354822) - CSDN
+> - [svm核函数的理解和选择](https://blog.csdn.net/Leonis_v/article/details/50688766) - CSDN
+
+## 3. L1与L2区别？L1为啥具有稀疏性？
+
+**L1 和 L2 范数的异同*****
+
+**相同点**
+
+- 限制模型的学习能力，通过限制参数的规模，使模型偏好于权值较小的目标函数，防止过拟合。
+
+**不同点**
+
+- L1 正则化可以产生稀疏权值矩阵，即产生一个稀疏模型，可以用于特征选择；一定程度上防止过拟合
+- L2 正则化主要用于防止模型过拟合
+- L1 适用于特征之间有关联的情况；L2 适用于特征之间没有关联的情况
+
+L1为啥具有稀疏性：在这些角上，会有很多权值等于0，这就是为什么L1正则化可以产生稀疏模型，进而可以用于特征选择。
+
+> - [机器学习中正则化项L1和L2的直观理解](https://blog.csdn.net/jinping_shi/article/details/52433975) - CSDN
+
+## 4. xgboost的原理
+
+CART，回归树，GBDT，XGBoost，LightGBM
+
+XGBoost的四大改进:
+
+1. 改进残差函数
+   不用Gini作为残差，用二阶泰勒展开+树的复杂度（正则项）
+   带来如下好处：
+   - 可以控制树的复杂度
+   - 带有关于梯度的更多信息，获得了二阶导数
+   - 可以用线性分类器
+
+2. 采用预排序
+   因为每一次迭代中，都要生成一个决策树，而这个决策树是残差的决策树，所以传统的不能并行
+   但是陈天奇注意到，每次建立决策树，在分裂节点的时候，比如选中A特征，就要对A进行排序，再计算残差，这个花很多时间
+   于是陈天奇想到，每一次残差计算好之后，全部维度预先排序，并且此排序是可以并行的，并行排序好后，对每一个维度，计算一次最佳分裂点，求出对应的残差增益
+   于是只要不断选择最好的残差作为分裂点就可以。
+   也就是说，虽然森林的建立是串行的没有变，但是每一颗树枝的建立就变成是并行的了，带来的好处：
+
+   - 分裂点的计算可并行了，不需要等到一个特征的算完再下一个了
+   - 每层可以并行：
+     当分裂点的计算可以并行，对每一层，比如分裂了左儿子和右儿子，那么这两个儿子上分裂哪个特征及其增益也计算好了
+
+3. Shrinkage（缩减）
+   相当于学习速率（XGBoost中的eta）。XGBoost在进行完一次迭代时，会将叶子节点的权值乘上该系数，主要是为了削弱每棵树的影响，让后面有更大的学习空间。（GBDT也有学习速率）
+
+4. 列抽样
+
+   XGBoost借鉴了随机森林的做法，支持列抽样，不仅防止过 拟合，还能减少计算。
+
+> 以信息增益作为划分训练数据集的特征，存在偏向于选择取值较多的特征的问题，使用信息增益比可以对这一问题进行校正。其对应的应用为，信息增益对应ID3算法，信息增益比对应C4.5算法。
+
+XGBoost是boosting算法的其中一种。Boosting算法的思想是将许多弱分类器集成在一起形成一个强分类器。因为XGBoost是一种提升树模型，所以它是将许多树模型集成在一起，形成一个很强的分类器。而所用到的树模型则是CART回归树模型。讲解其原理前，先讲解一下CART回归树。
+
+CART：
+
+> - [ID3、C4.5、CART、随机森林、bagging、boosting、Adaboost、GBDT、xgboost算法总结](https://zhuanlan.zhihu.com/p/34534004) - 知乎
+> - [GBDT、XGBoost、LightGBM 的使用及参数调优](https://zhuanlan.zhihu.com/p/33700459) - 知乎
+> - [CART，回归树，GBDT，XGBoost，LightGBM一路理解过来](https://blog.csdn.net/a790209714/article/details/78086867) - CSDN
+> - [xgboost原理](https://blog.csdn.net/a819825294/article/details/51206410) - CSDN
+
+## 5. sigmoid函数的导函数的取值范围是多少？其实就是一元二次方程的y值范围，0-1/4
+
+
+
+
+
+
+
+
+
+## 6. Python中协成的概念，即微线程，具体可以看廖雪峰的网站
+
+
+
+
+
+
+
+## 7. C++中vector增删改的时间复杂度，O(1)，O(n)，O(n)
+
+
+
+
+
+
+
+
+
+## 8. MySQL中索引用的什么数据结构？B-Tree或B+Tree
+
+
+
+
+
+## 9. Hash_table的底层是什么实现的？拉链法，数组+链表
+
+
+
+
+
+## 10. HBase的列式存储解释
+
+
+
+
+
+
+
+
+
+
+
+
 
 # 链家
 
