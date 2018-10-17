@@ -1025,75 +1025,392 @@ B-Tree有许多变种，其中最常见的是B+Tree，例如MySQL就普遍使用
 
 
 
-
-
-
+> - [列式存储 HBase 系统架构学习](http://blog.jobbole.com/101011/)
+> - [处理海量数据：列式存储综述（存储篇）](https://zhuanlan.zhihu.com/p/35622907) - 知乎
 
 ## 11. GBDT 和 XGBOOST 的区别
 
+**Gradient boosting(GB) **
 
+机器学习中的学习算法的目标是为了优化或者说最小化loss Function， Gradient boosting的思想是迭代生多个（M个）弱的模型，然后将每个弱模型的预测结果相加，后面的模型Fm+1(x)基于前面学习模型的Fm(x)的效果生成的。
 
+**Gradient boosting Decision Tree(GBDT) 梯度提升决策树 **
 
+GB算法中最典型的基学习器是决策树，尤其是CART，正如名字的含义，GBDT是GB和DT的结合。要注意的是这里的决策树是回归树，GBDT中的决策树是个弱模型，深度较小一般不会超过5，叶子节点的数量也不会超过10，对于生成的每棵决策树乘上比较小的缩减系数（学习率<0.1），有些GBDT的实现加入了随机抽样（subsample 0.5<=f <=0.8）提高模型的泛化能力。通过交叉验证的方法选择最优的参数。
+
+**Xgboost **
+Xgboost是GB算法的高效实现，xgboost中的基学习器除了可以是CART（gbtree）也可以是线性分类器（gblinear）。 
+
+**GBDT和Xgboost的区别**
+
+- xgboost在目标函数中显示的加上了正则化项，基学习为CART时，正则化项与树的叶子节点的数量T和叶子节点的值有关。 
+- GB中使用Loss Function对f(x)的一阶导数计算出伪残差用于学习生成fm(x)，xgboost不仅使用到了一阶导数，还使用二阶导数。 
+- 上面提到CART回归树中寻找最佳分割点的衡量标准是最小化均方差，xgboost寻找分割点的标准是最大化，lamda，gama与正则化项相关。
+
+xgboost算法的步骤和GB基本相同，都是首先初始化为一个常数，gb是根据一阶导数ri，xgboost是根据一阶导数gi和二阶导数hi，迭代生成基学习器，相加更新学习器。 
+
+**xgboost与gdbt除了上述三点的不同，xgboost在实现时还做了许多优化：**
+
+- 在寻找最佳分割点时，考虑传统的枚举每个特征的所有可能分割点的贪心法效率太低，xgboost实现了一种近似的算法。大致的思想是根据百分位法列举几个可能成为分割点的候选者，然后从候选者中根据上面求分割点的公式计算找出最佳的分割点。 
+- xgboost**考虑了训练数据为稀疏值的情况，可以为缺失值或者指定的值指定分支的默认方向，这能大大提升算法的效率**，paper提到50倍。 
+  特征列排序后以块的形式存储在内存中，在迭代中可以重复使用；虽然boosting算法迭代必须串行，但是在处理每个特征列时可以做到并行。 
+  按照特征列方式存储能优化寻找最佳的分割点，但是当以行计算梯度数据时会导致内存的不连续访问，严重时会导致cache miss，降低算法效率。paper中提到，可先将数据收集到线程内部的buffer，然后再计算，提高算法的效率。 
+- xgboost 还考虑了当数据量比较大，内存不够时怎么有效的使用磁盘，主要是结合多线程、数据压缩、分片的方法，尽可能的提高算法的效率。
+
+**GBDT和随机森林的相同点： **
+
+- 都是由多棵树组成 
+- 最终的结果都是由多棵树一起决定
+
+**GBDT和随机森林的不同点： **
+
+- 组成随机森林的树可以是分类树，也可以是回归树；而GBDT只由回归树组成 
+- 组成随机森林的树可以并行生成；而GBDT只能是串行生成 
+- 对于最终的输出结果而言，随机森林采用多数投票等；而GBDT则是将所有结果累加起来，或者加权累加起来 
+- 随机森林对异常值不敏感，GBDT对异常值非常敏感 
+- 随机森林对训练集一视同仁，GBDT是基于权值的弱分类器的集成 
+- 随机森林是通过减少模型方差提高性能，GBDT是通过减少模型偏差提高性能
+
+**RF **
+学习随机森林模型前，一定要先了解决策树模型。树越深，模型越复杂。 
+决策树模型的优点如下。 
+
+- 容易理解和解释，树可以被可视化。 
+- 不需要太多的数据预处理工作，即不需要进行数据归一化，创造哑变量等操作。 
+- 隐含地创造了多个联合特征，并能够解决非线性问题。 
+
+决策树模型最大的缺点是容易过拟合
+
+随机森林由很多棵不同的决策树构成，对于一个给定的预测对象，每棵决策树都输出一个label，最后采取“投票”的方式，选择得票最多的label作为最终结果。随机森林是一种集成方法，也被认为是最近邻预测器的一种。集成方法是将一组弱分类器以一定的方式组合起来，形成一个强分类器。
+
+> - [机器学习时代的三大神器:GBDT,XGBOOST和LightGBM](https://www.imooc.com/article/29530)
+> - [RF GBDT XGBOOST的区别与联系](https://blog.csdn.net/timcompp/article/details/61919851)
+> - [RF、GBDT、XGBoost面试级整理](https://blog.csdn.net/qq_28031525/article/details/70207918)
 
 ## 12. LTR、LR、FTRL、SVM、GBDT、Reinforcement Learning、Deep Learning
 
+### 12.1 LTR（Learning to Rank）
 
+LTR在信息检索领域使用很多，往往将它定性为判别式模型，被认为更加现代与激进，一般而言有三种方法：
 
+- 单文档方法（Pointwise）
+- 文档对方法（Pairwise）
+- 文档列表方法（Listwise）
 
+LTR有三种主要的方法：PointWise，PairWise，ListWise。
+
+> - [Learning to rank基本算法小结](https://zhuanlan.zhihu.com/p/26539920) - 知乎
+> - [Learning to Rank(LTR)](https://blog.csdn.net/clheang/article/details/45674989)
+> - [机器学习排序LTR入门——线性模型](http://www.infoq.com/cn/news/2017/10/Machine-learn-LTR-linear-model)
+> - [LTR排序之pair-wise-ranknet算法TensorFlow实现](https://www.deeplearn.me/1982.html)
+> - [LTR（Learning to Rank）小结](https://juejin.im/post/5b7e83d96fb9a01a0158011c)
+> - [LambdaMART 不太简短之介绍](https://liam.page/2016/07/10/a-not-so-simple-introduction-to-lambdamart/)
+> - [Ranking SVM 简介](https://blog.csdn.net/clheang/article/details/45767103)
+
+### 12.2 LR（Logistic Regression）
+
+Logistic Regression本质上还是Linear Regression的一种，只是用了一个Logistic Function将线性回归的连续值映射到了`{0,1}`空间。因此Linear Regression只能对具有线性边界的分类问题有很好的预测效果，对于非线性的边界是无能为力的。
+
+Logistic Regression就是试图找到不同类别之间的线性决策边界。
+
+Logistic回归虽然名字里带“回归”，但是它实际上是一种分类方法，主要用于两分类问题
+
+**Logistic回归优点：**
+
+1. 实现简单；
+2. 分类时计算量非常小，速度很快，存储资源低；
+
+**缺点：**
+
+1. 容易欠拟合，一般准确度不太高（正则化、减少feature数量）
+2. 只能处理两分类问题（在此基础上衍生出来的softmax可以用于多分类），且必须线性可分；
+
+> - [LR(Logistic Regression)算法详解](https://blog.csdn.net/u012897374/article/details/75331587)
+> - [机器学习经典算法详解及Python实现---Logistic回归（LR）分类器](https://blog.csdn.net/suipingsp/article/details/41822313)
+> - [认识Logistic回归（LR）分类器](https://zhuanlan.zhihu.com/p/28057866)
+> - [逻辑回归模型(Logistic Regression, LR)基础](https://www.cnblogs.com/sparkwen/p/3441197.html)
+
+### 12.3 FTRL（Follow-the-regularized-Leader）
+
+在工业界，越来越多的业务需要大规模机器学习，不单参与训练的数据量大，模型特征量的规模也大。例如点击率预估，训练数据量在TB量级，特征量在亿这个量级，业内常用LR（Logistic Regression）和FM（Factorization Machines）为点击率预估建模。对LR、FM这类模型的参数学习，传统的学习算法是batch learning算法，它无法有效地处理大规模的数据集，也无法有效地处理大规模的在线数据流。这时，有效且高效的online learning算法显得尤为重要。
+
+SGD算法[1]是常用的online learning算法，它能学习出不错的模型，但学出的模型不是稀疏的。为此，学术界和工业界都在研究这样一种online learning算法，它能学习出有效的且稀疏的模型。FTRL（Follow the Regularized Leader）算法正是这样一种算法，它由Google的H. Brendan McMahan在2010年提出的[2]，后来在2011年发表了一篇关于FTRL和AOGD、FOBOS、RDA比较的论文[3]，2013年又和Gary Holt, D. Sculley, Michael Young等人发表了一篇关于FTRL工程化实现的论文[4]。如论文[4]的内容所述，FTRL算法融合了RDA算法能产生稀疏模型的特性和SGD算法能产生更有效模型的特性。它在处理诸如LR之类的带非光滑正则化项（例如1范数，做模型复杂度控制和稀疏化）的凸优化问题上性能非常出色，国内各大互联网公司都已将该算法应用到实际产品中。
+
+> - [FTRL算法理解](http://luowei828.blog.163.com/blog/static/310312042015112114923537/)
+> - [各大公司广泛使用的在线学习算法FTRL详解](https://www.cnblogs.com/EE-NovRain/p/3810737.html)
+> - [在线学习算法FTRL](https://blog.csdn.net/mytestmy/article/details/18980163)
+> - [机器学习（五）--- FTRL一路走来，从LR -> SGD -> TG -> FOBOS -> RDA -> FTRL](https://blog.csdn.net/china1000/article/details/51176654)
+> - [FTRL原理与工程实践（BY GOOGLE）](http://iyao.ren/?p=137)
+
+### 12.4 SVM（support vector machine）
+
+通俗来讲，它是一种二类分类模型，其基本模型定义为特征空间上的间隔最大的线性分类器，其学习策略便是间隔最大化，最终可转化为一个凸二次规划问题的求解。
+
+> - [支持向量机通俗导论（理解SVM的三层境界）](https://blog.csdn.net/v_JULY_v/article/details/7624837)
+> - [支持向量机(Support Vector Machines-SVM)算法笔记(一)-Python](https://www.jianshu.com/p/ba59631855a3) - 简书
+> - [从零开始SVM算法(1)-SVM是什么](https://www.jianshu.com/p/924f71e28d75) - 简书
+> - [支持向量机(SVM)是什么意思？](https://www.zhihu.com/question/21094489) - 知乎
+> - [机器学习算法实践-支持向量机(SVM)算法原理](https://zhuanlan.zhihu.com/p/28660098) - 知乎
+
+### 12.5 GBDT（Gradient Boosting Decision Tree）
+
+梯度提升（Gradient boosting）是一种用于回归、分类和排序任务的机器学习技术[1](https://blog.csdn.net/yangxudong/article/details/53872141#fn:1)，属于Boosting算法族的一部分。
+
+GBDT(Gradient Boosting Decision Tree) 又叫 MART（Multiple Additive Regression Tree)，是一种迭代的决策树算法，该算法由多棵决策树组成，所有树的结论累加起来做最终答案。它在被提出之初就和SVM一起被认为是泛化能力（generalization)较强的算法。近些年更因为被用于搜索排序的机器学习模型而引起大家关注。
+
+由于GBDT的卓越性能，只要是研究机器学习都应该掌握这个算法，包括背后的原理和应用调参方法。目前GBDT的算法比较好的库是xgboost。
+
+**GBDT主要的优点有：**
+
+-  可以灵活处理各种类型的数据，包括连续值和离散值。
+-  在相对少的调参时间情况下，预测的准确率也可以比较高。这个是相对SVM来说的。
+- 使用一些健壮的损失函数，对异常值的鲁棒性非常强。比如 Huber损失函数和Quantile损失函数。
+
+**GBDT的主要缺点有：**
+
+- 由于弱学习器之间存在依赖关系，难以并行训练数据。不过可以通过自采样的SGBT来达到部分并行。
+
+> - [梯度提升树(GBDT)原理小结](https://www.cnblogs.com/pinard/p/6140514.html) - 刘建平Pinard
+> - [GBDT（MART） 迭代决策树入门教程 | 简介](https://blog.csdn.net/w28971023/article/details/8240756)
+> - [GBDT 算法：原理篇](https://cloud.tencent.com/developer/article/1005611) - 腾讯云
+> - [GBDT算法详解](https://www.zybuluo.com/Dounm/note/1031900)
+
+### 12.6 Reinforcement Learning（）
+
+TODO
+
+> - [增强学习Reinforcement Learning经典算法梳理1：policy and value iteration](https://blog.csdn.net/songrotek/article/details/51378582)
+> - [增强学习Reinforcement Learning经典算法梳理3：TD方法](https://blog.csdn.net/songrotek/article/details/51382759)
+> - [模型汇总19 强化学习（Reinforcement Learning）算法基础及分类](https://t.cj.sina.com.cn/articles/view/6534384195/1857aca4300100b1w9)
+> - [如何用简单例子讲解 Q - learning 的具体过程？](https://www.zhihu.com/question/26408259) - 知乎
 
 # 链家
 
 ## 1. 最小二乘与极大似然函数的关系？从概率统计的角度处理线性回归并在似然概率为高斯函数的假设下同最小二乘简历了联系
 
+对于最小二乘法，当从模型总体随机抽取n组样本观测值后，最合理的参数估计量应该使得模型能最好地拟合样本数据，也就是估计值和观测值之差的平方和最小。而对于最大似然法，当从模型总体随机抽取n组样本观测值后，最合理的参数估计量应该使得从模型中抽取该n组样本观测值的概率最大。显然，这是从不同原理出发的两种参数估计方法。
 
+在最大似然法中，通过选择参数，使已知数据在某种意义下最有可能出现，而某种意义通常指似然函数最大，而似然函数又往往指数据的概率分布函数。与最小二乘法不同的是，最大似然法需要已知这个概率分布函数，这在时间中是很困难的。一般假设其满足正态分布函数的特性，在这种情况下，最大似然估计和最小二乘估计相同。
 
+最小二乘法以估计值与观测值的差的平方和作为损失函数，极大似然法则是以最大化目标值的似然概率函数为目标函数，从概率统计的角度处理线性回归并在似然概率函数为高斯函数的假设下同最小二乘建立了的联系。
 
+> - [最小二乘法和最大似然法](http://blog.sina.com.cn/s/blog_4b12446d010191ri.html)
+> - [线性回归的损失函数为什么用最小二乘不用似然函数？](https://blog.csdn.net/Beyond_2016/article/details/80030414)
 
-## 2. LR为啥是个线性模型？本质就是线性的，只是特征到结果映射用的是sigmoid函数，或者说回归边界是线性的，即P(Y=1|x)=P(Y=0|x)时有`W*x=0`
+## 2. LR为啥是个线性模型？
 
-
-
-
+本质就是线性的，只是特征到结果映射用的是sigmoid函数，或者说回归边界是线性的，即P(Y=1|x)=P(Y=0|x)时有`W*x=0`
 
 ## 3. 分类的评价标准，准确度，AUC，召回率等等
 
+<img src="source/机器学习性能评估指标.png">
 
+【准确率】accuracy
 
+正确分类的样本/总样本：(TP+TN)/(ALL)
 
+在不平衡分类问题中难以准确度量：比如98%的正样本只需全部预测为正即可获得98%准确率
+
+【精确率】【查准率】precision
+
+TP/(TP+FP)：在你预测为1的样本中实际为1的概率
+
+查准率在检索系统中：检出的**相关**文献与**检出的全部文献**的百分比，衡量**检索的信噪比**
+
+【召回率】【查全率】recall
+
+TP/(TP+FN)：在实际为1的样本中你预测为1的概率
+
+查全率在检索系统中：检出的**相关**文献与**全部相关**文献的百分比，衡量**检索的覆盖率**
+
+【ROC】
+
+常被用来评价一个二值分类器的优劣
+
+<img src="source/ROC曲线.png">
+
+ROC曲线有个很好的特性：当测试集中的正负样本的分布变化的时候，ROC曲线能够保持不变。而Precision-Recall曲线会变化剧烈，故ROC经常被使用。
+
+【AUC】
+
+AUC（Area Under Curve）被定义为ROC曲线下的面积，完全随机的二分类器的AUC为0.5，虽然在不同的阈值下有不同的FPR和TPR，但相对面积更大，更靠近左上角的曲线代表着一个更加稳健的二分类器。
+
+同时针对每一个分类器的ROC曲线，又能找到一个最佳的概率切分点使得自己关注的指标达到最佳水平。
+
+【AUC的排序本质】
+
+大部分分类器的输出是概率输出，如果要计算准确率，需要先把概率转化成类别，就需要手动设置一个阈值，而这个超参数的确定会对优化指标的计算产生过于敏感的影响
+
+AUC从Mann–Whitney U statistic的角度来解释：随机从标签为1和标签为0的样本集中分别随机选择两个样本，同时分类器会输出两样本为1的概率，那么我们认为分类器对**“标签1样本的预测概率>对标签0样本的预测概率 ”的概率**等价于AUC。
+
+因而AUC反应的是分类器对样本的排序能力，这样也可以理解AUC对不平衡样本不敏感的原因了。
+
+> - [模型评价方法](https://www.jianshu.com/p/b4d40760156c) - 简书
+> - [全面梳理：准确率,精确率,召回率,查准率,查全率,假阳性,真阳性,PRC,ROC,AUC,F1](https://zhuanlan.zhihu.com/p/34079183) - 知乎
+> - [准确率(Precision)、召回率(Recall)、F值(F-Measure)、ROC、AUC](https://blog.csdn.net/xwd18280820053/article/details/70674256)
 
 ## 4. 有的逻辑回归损失函数中为啥要加 `-1*m`
 
+TODO
+
+## 5. 欠拟合的解决方法？
+
+模型简单，加深神经网络，svm用核函数等等
 
 
 
+## 6. L2正则的本质？
 
-## 5. 欠拟合的解决方法？模型简单，加深神经网络，svm用核函数等等
-
-
-
-## 6. L2正则的本质？限制解空间范围，缩小解空间，控制模型复杂度
+限制解空间范围，缩小解空间，控制模型复杂度
 
 
 
+## 7. SVM引入核函数本质？
+
+提高维度，增加模型复杂度
 
 
-## 7. SVM引入核函数本质？提高维度，增加模型复杂度
+
+## 8. Boosting和Bagging区别和联系
+
+**什么是集成学习（ensemble learning）？ **
+集成学习就是通过构建多个基分类器并将多个基分类器通过一个的规则结合起来共同完成学习任务的学习方法。 
+目前集成学习方法包含两类：
+
+- 个体学习器间存在依赖关系、必须串行生成的序列化方法。（代表：Boosting）
+
+- 个体学习器间不存在强依赖关系、可同时生成的并行化方法。（代表：Bagging）
+
+**Boosting**
+定义： Boosting先初始从训练集中训练出一个基学习器，再根据基学习器的表现对训练样本分布进行调整，使得先前基学习器做错的训练样本在后续得到更多的关注，然后基于调整后的样本分布来训练下一个基学习器；如此重复进行，知道基学习器数目达到预先设定的值T，最终将T个基学习器进行加权结合。 
+从偏差-方差的角度，Boosting更关注降低偏差。偏差指的是算法期望预测与真实预测之间的偏差程度，返佣了模型本身的泛化能力。
+
+**Bagging**
+
+- 自助采样法（bootstrap sampling） 
+  自助采样法给定包含m个样本的数据集，从中随机取出一个样本放入采样集中，再把样本放回初始数据集（又放回采样），使得下次采样时该样本仍有可能被选中，这样，经过m次随机采样操作，得到含有m个样本的采样集，初始训练集中有的样本出现多次，有的未出现。初始训练集中约63.2%的样本出现在采样集中。 
+  从偏差-方差的角度，Bagging更关注降低方差。方差度量了同等大小的训练集变动导致学习性能的变化，刻画了数据扰动所导致的影响
+- Bagging 
+  Bagging的样本采样基于自助采样法（bootstrap sampling）。采样出T个含有m个训练样本的采样集，然后基于每个采样集训练出一个基学习器，再将这些基学习器进行结合。
+
+集成学习的结合策略
+
+1. 平均法 
+   - 简单平均法：所有数值型输出值的和除以总个数 
+   - 加权平均法：每个个体学习器乘以其权重然后再求加和。 
+2. 投票法 
+   - 绝对多数投票法：标记的票数超过一半就预测为该标记，否则拒绝预测。 
+   - 相对多数投票法：即预测为得票最多的标记，若同时有多个标记获得最高票，从中随机选取一个。 
+   - 加权投票法：每个基学习器乘以一个权重后，选择预测为得票最多的标记。 
+3. 学习法 
+   通过一个学习器来进行结合。典型代表：Stacking. 
+   Stacking先从初始数据集训练出初级学习器，然后“生成”一个新的数据集用于训练次级学习器。 Stacking的思想：第j个基模型对第i个训练样本的预测值将作为下一层新的训练集中第i个样本的第j个feature，然后基于新的训练集继续训练；第j个基模型对测试集中第i个样本预测结果的平均值，作为下一层测试集第i个样本第j个feature。 
+
+**bagging与boosting的不同：**
+
+- 样本选择上：
+  - Bagging：训练集是在原始集中有放回选取的，从原始集中选出的各轮训练集之间是独立的.
+  - Boosting：每一轮的训练集不变，只是训练集中每个样例在分类器中的权重发生变化.而权值是根据上一轮的分类结果进行调整.
+
+- 样例权重：
+  - Bagging：使用均匀取样，每个样例的权重相等
+  - Boosting：根据错误率不断调整样例的权值，错误率越大则权重越大.
+
+- 预测函数：
+  - Bagging：所有预测函数的权重相等.
+  - Boosting：每个弱分类器都有相应的权重，对于分类误差小的分类器会有更大的权重.
+
+- 并行计算：
+  - Bagging：各个预测函数可以并行生成
+  - Boosting：各个预测函数只能顺序生成，因为后一个模型参数需要前一轮模型的结果.
+
+**随机森林**
+
+随机森林，就是bagging方法下的k棵决策树，只不过在选取分割特征的时候加入了随机性。其具体算法如下：
+
+- 从原始训练集中使用Bootstraping方法随机有放回采样选出m个样本，共进行n_tree次采样，生成n_tree个训练集。
+
+- 对于n_tree个训练集，分别训练n_tree个决策树模型。
+
+- 对于单个决策树模型，假设训练样本特征的个数为n，那么每次从中随机抽取出一个大小为m(1<=m<=n)的特征子集，分裂时根据信息增益/信息增益比/基尼指数等等，在这个特征子集中选择最好的特征进行分裂。
+
+- 每棵树都一直这样分裂下去，直到该节点的所有训练样例都属于同一类。
+
+- 将生成的多棵决策树组成随机森林。
+
+> - [集成学习方法Boosting和Bagging](https://blog.csdn.net/yingfengfeixiang/article/details/79729436)
+> - [bagging与boosting集成学习、随机森林](https://www.cnblogs.com/DOLFAMINGO/p/9622390.html)
+> - [bootstrap, boosting, bagging 几种方法的区别与联系（转载）](http://blog.sina.com.cn/s/blog_4a0824490102vb2c.html)
+
+## 9. xgboost如何寻找最优特征？是有放回还是无放回的呢？
 
 
+xgboost在训练的过程中给出各个特征的增益评分，最大增益的特征会被选出来作为分裂依据, 从而记忆了每个特征对在模型训练时的重要性 -- 从根到叶子中间节点涉及某特征的次数作为该特征重要性排序.
 
+xgboost属于boosting集成学习方法, 样本是不放回的, 因而每轮计算样本不重复. 另一方面, xgboost支持子采样, 也就是每轮计算可以不使用全部样本, 以减少过拟合. 进一步地, xgboost 还有列采样, 每轮计算按百分比随机采样一部分特征, 既提高计算速度又减少过拟合。
+
+## 10. RF和GBDT的区别?二者的优化目标是什么?
+
+- GBDT是采用boosing方法，RF采用的是baggging方法
+
+- bias和variance是解释模型泛化性能的，其实还有噪声
+
+GBDT中的核心是通过用分类器（如CART、RF）拟合损失函数梯度，而损失函数的定义就决定了在子区域内各个步长，其中就是期望输出与分类器预测输出的查，即bias；
+
+RF的核心就是自采样（样本随机）和属性随机（所有样本中随机选择K个子样本选择最优属性来划分），样本数相同下的不同训练集产生的各个分类器，即数据的扰动导致模型学习性能的变化，即variance。
+
+> - [GBDT与RF的区别](https://blog.csdn.net/u010398493/article/details/77587749)
+> - [RF GBDT XGBOOST的区别与联系](https://blog.csdn.net/u010159842/article/details/77506830)
+> - [机器学习算法面试小结](https://zhuanlan.zhihu.com/p/29677765) - 知乎
 
 
 # 滴滴
 
-- 介绍xgboost、gbdt、rf的区别
-- 树模型的特征选择中除了信息增益、信息增益比、基尼指数这三个外，还有哪些？
-- Sklearn中树模型输出的特征重要程度是本身的还是百分比？
-- 介绍下SVM以及它的核函数
-- 熟悉FM算法不
-- 算法题：两个链表的第一个公共节点
+## 1. 介绍xgboost、gbdt、rf的区别
 
-- 进程和线程的区别？
-- HBase数据库的优点？
+
+
+##2. 树模型的特征选择中除了信息增益、信息增益比、基尼指数这三个外，还有哪些？
+
+
+
+
+
+## 3. Sklearn中树模型输出的特征重要程度是本身的还是百分比？
+
+
+
+
+
+## 4. 介绍下SVM以及它的核函数
+
+
+
+
+
+## 5. 熟悉FM算法不
+
+
+
+
+
+## 6. 算法题：两个链表的第一个公共节点
+
+
+
+
+
+## 7. 进程和线程的区别？
+
+
+
+
+
+## 8. HBase数据库的优点？
+
+
+
+
 
 # xx
 
@@ -1177,8 +1494,6 @@ B-Tree有许多变种，其中最常见的是B+Tree，例如MySQL就普遍使用
 - 解释rf，xgboost，gbdt的区别
 - 编程题：从数组A中找出所有和为S的两个数的索引，leetcode 原题
 - 顺时针打印矩阵：剑指offer上的原题
-
-
 
 
 
@@ -1310,7 +1625,9 @@ B-Tree有许多变种，其中最常见的是B+Tree，例如MySQL就普遍使用
 # Interview Link
 
 - [七月在线深度学习面试题***](https://www.julyedu.com/question/big/kp_id/26/ques_id/932) - 七月在线
+- [机器学习算法面试小结](https://zhuanlan.zhihu.com/p/29677765) - 知乎
 - [那些深度学习《面试》你可能需要知道的](https://zhuanlan.zhihu.com/p/29936999) - 知乎
+- [机器学习/算法19家公司面试总结](http://www.dajiangtai.com/community/18602.do) - 大讲台
 - [深度学习面试](https://blog.csdn.net/mieleizhi0522/article/details/80001770) - CSDN
 - [爱奇艺-推荐算法面试](https://blog.csdn.net/u012559634/article/details/71178567) - CSDN
 - [字节跳动（今日头条）推荐算法实习生面试](https://blog.csdn.net/program_developer/article/details/80340829) - CSDN
