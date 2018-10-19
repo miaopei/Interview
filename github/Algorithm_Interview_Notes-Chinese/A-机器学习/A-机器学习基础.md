@@ -23,10 +23,12 @@ Index
   - 模型的**偏差**，指的是模型预测的**期望值**与**真实值**之间的差；
   - 模型的**方差**，指的是模型预测的**期望值**与**预测值**之间的差平方和；
 - 在**监督学习**中，模型的**泛化误差**可**分解**为偏差、方差与噪声之和。
+
   <div align="center"><img src="../_assets/TIM截图20180817204652.png" height="" /></div>
 
 - **偏差**用于描述模型的**拟合能力**；<br/>
   **方差**用于描述模型的**稳定性**。
+
   <div align="center"><img src="../_assets/TIM截图20180817192259.png" height="" /></div>
 
 ### 导致偏差和方差的原因
@@ -41,6 +43,7 @@ Index
 - 神经网络的拟合能力非常强，因此它的**训练误差**（偏差）通常较小；
 - 但是过强的拟合能力会导致较大的方差，使模型的测试误差（**泛化误差**）增大；
 - 因此深度学习的核心工作之一就是研究如何降低模型的泛化误差，这类方法统称为**正则化方法**。
+
   > ../深度学习/[正则化](../A-深度学习/C-专题-正则化)
 
 ### 偏差/方差 与 Boosting/Bagging
@@ -51,8 +54,9 @@ Index
   <div align="center"><a href="http://www.codecogs.com/eqnedit.php?latex=f(\boldsymbol{x};D)"><img src="../_assets/公式_20180817211749.png" height="" /></a></div>
 
   模型的**期望预测**为
+
   <div align="center"><a href="http://www.codecogs.com/eqnedit.php?latex=\large&space;\hat{f}(\boldsymbol{x})=\mathbb{E}_D[f(\boldsymbol{x};D)]"><img src="../_assets/公式_20180817210758.png" height="" /></a></div>
-  
+
 - **偏差**（Bias）
   <div align="center"><a href="http://www.codecogs.com/eqnedit.php?latex=\large&space;bias^2(\boldsymbol{x})=(\hat{f}(\boldsymbol{x})-y)^2"><img src="../_assets/公式_20180817210106.png" height="" /></a></div>
 
@@ -61,7 +65,8 @@ Index
   <div align="center"><a href="http://www.codecogs.com/eqnedit.php?latex=\large&space;var(\boldsymbol{x})=\mathbb{E}_D\left&space;[&space;\left&space;(&space;f(\boldsymbol{x};D)-\hat{f}(\boldsymbol{x})&space;\right&space;)^2&space;\right&space;]"><img src="../_assets/公式_20180817211903.png" height="" /></a></div>
 
   > **方差**度量了同样大小的**训练集的变动**所导致的学习性能的变化，即刻画了数据扰动所造成的影响（模型的稳定性）；
-<!-- - **噪声**
+  <!-- - **噪声**
+
   <div align="center"><a href="http://www.codecogs.com/eqnedit.php?latex=\large&space;var(\boldsymbol{x})=\mathbb{E}_D\left&space;[&space;\left&space;(&space;f(\boldsymbol{x};D)-\hat{f}(\boldsymbol{x})&space;\right&space;)^2&space;\right&space;]"><img src="../_assets/公式_20180817212111.png" height="" /></a></div> -->
 
 - **噪声**则表达了在当前任务上任何学习算法所能达到的期望泛化误差的下界，即刻画了学习问题本身的难度。
@@ -96,13 +101,16 @@ Index
   - **条件概率分布**：输入 X 返回 **X 属于每个类别的概率**；将其中概率最大的作为 X 所属的类别
 - 监督学习模型可分为**生成模型**与**判别模型**
   - **判别模型**直接学习决策函数或者条件概率分布
+
     - 直观来说，**判别模型**学习的是类别之间的最优分隔面，反映的是不同类数据之间的差异
   - **生成模型**学习的是联合概率分布`P(X,Y)`，然后根据条件概率公式计算 `P(Y|X)`
+
     <div align="center"><a href="http://www.codecogs.com/eqnedit.php?latex=\fn_phv&space;\large&space;P(Y|X)=\frac{P(X,Y)}{P(X)}"><img src="../_assets/公式_20180817223923.png" height="" /></a></div>
 
 **两者之间的联系**
 - 由生成模型可以得到判别模型，但由判别模型得不到生成模型。
 - 当存在“**隐变量**”时，只能使用**生成模型**
+
   > 隐变量：当我们找不到引起某一现象的原因时，就把这个在起作用，但无法确定的因素，叫“隐变量”
 
 **优缺点**

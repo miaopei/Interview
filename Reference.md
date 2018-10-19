@@ -33,6 +33,16 @@
 
 ## Reference
 
+### 《神经网络与深度学习》3小时课程概要
+
+- [神经网络与深度学习](https://nndl.github.io/) - book
+- [微积分总结微积分总结 Summary of Calculus](https://hujiaweibujidao.github.io/files/calculus_summary.pdf) - pdf
+- [#机器学习数学基础# 可导，可微，导数，偏导数...都是些啥？](https://cloud.tencent.com/developer/article/1061415)
+
+
+
+## Reference
+
 - [详解机器学习中的梯度消失、爆炸原因及其解决方法](https://blog.csdn.net/qq_25737169/article/details/78847691) - CSDN
 
 - [DeepLearning学习笔记——无监督学习算法](https://blog.csdn.net/hustqb/article/details/77234949) - CSDN

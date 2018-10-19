@@ -70,8 +70,10 @@
 - [算法/NLP/深度学习/机器学习面试笔记](https://blog.csdn.net/imhuay/article/details/81490564) - CSDN博客 
 - [GitHub 上整理的深度学习/机器学习面试笔记](https://www.v2ex.com/t/473047) - V2EX  -->
 
-Github commit -- emoji
+工具
 ---
 
 - [git commit 时 图标使用 --- emoji 指南](https://www.jianshu.com/p/0bfdf5c41696) - 简书
 
+- [快速生成Github README.md的目录](http://blog.sciencenet.cn/blog-3247241-1104736.html)
+- [在线 LaTeX 编辑器](https://www.codecogs.com/latex/eqneditor.php)
