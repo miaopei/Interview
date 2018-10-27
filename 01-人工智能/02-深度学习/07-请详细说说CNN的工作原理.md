@@ -67,13 +67,13 @@
 
 sigmoid 的函数表达式如下
 
-<img src="Z:/workdir/github/DeepLearning/Interview/01-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/02-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/_asset/Sigmoid-01.png">
+<img src="_asset/Sigmoid-01.png">
 
 其中 `z` 是一个线性组合，比如 `z` 可以等于：`b + w1*x1 + w2*x2`。通过代入很大的正数或很小的负数到 `g(z)` 函数中可知，其结果趋近于 0 或 1。
 
 因此，sigmoid 函数 `g(z)` 的图形表示如下（ 横轴表示定义域 `z`，纵轴表示值域 `g(z) `）：
 
-<img src="Z:/workdir/github/DeepLearning/Interview/01-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/02-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/_asset/Sigmoid-02.png">
+<img src="_asset/Sigmoid-02.png">
 
 也就是说，sigmoid 函数的功能是相当于把一个实数压缩至 0 到 1 之间。当 `z` 是非常大的正数时， `g(z)` 会趋近于 1，而 `z` 是非常小的负数时，则 `g(z)` 会趋近于 0。
 
@@ -81,7 +81,7 @@ sigmoid 的函数表达式如下
 
 举个例子，如下图（图引自Stanford机器学习公开课）
 
-<img src="Z:/workdir/github/DeepLearning/Interview/01-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/02-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/_asset/Sigmoid-03.png">
+<img src="_asset/Sigmoid-03.png">
 
 `z = b + w1*x1 + w2*x2`，其中 `b`  为偏置项 假定取 `-30`，`w1、w2`都取为 `20`
 
