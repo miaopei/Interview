@@ -1,5 +1,10 @@
+# 机器学习算法地图
+
+<img src="./01-人工智能/_asset/机器学习算法地图.png">
+
 算法/深度学习/NLP面试笔记
 ===
+
 **GitHub** 地址：https://github.com/imhuay/CS_Interview_Notes-Chinese
 
 - :basketball: [<font size=+1>深度学习</font>](./github/Algorithm_Interview_Notes-Chinese/A-深度学习)

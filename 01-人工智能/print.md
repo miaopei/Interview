@@ -1057,7 +1057,13 @@ GRU 只有两个门（update 和 reset），LSTM 有三个门（forget，input�
 
 
 
+## 70. 机器学习框架
 
+> [机器学习者必知的5种深度学习框架](https://www.leiphone.com/news/201804/eqPWoX8XgM5x611d.html)
+>
+> [DL4J与Torch、Theano、TensorFlow、Caffe、Paddle、MxNet、Keras 和 CNTK的比较](https://deeplearning4j.org/cn/compare-dl4j-torch7-pylearn.html)
+>
+> [机器学习必知的15大框架](https://zhuanlan.zhihu.com/p/31714401)
 
 
 
