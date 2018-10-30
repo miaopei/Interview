@@ -1067,6 +1067,11 @@ GRU 只有两个门（update 和 reset），LSTM 有三个门（forget，input�
 
 
 
+> [ PyTorch中文文档](https://pytorch-cn.readthedocs.io/zh/latest/)
+>
+> [PyTorch 0.3.0 中文教程](http://pytorch.apachecn.org/cn/tutorials/)
+>
+> [Keras vs PyTorch：谁是「第一」深度学习框架？](https://zhuanlan.zhihu.com/p/38710857)
 
 
 
@@ -1074,6 +1079,49 @@ GRU 只有两个门（update 和 reset），LSTM 有三个门（forget，input�
 
 
 
+## 71. Bagging 方法 VS. Dropout 方法
+
+模型：
+
+- Bagging中，所有模型是独立的
+- Dropout中，子网络间分享参数
+
+训练：
+
+- Bagging中，所有的模型都会被训练
+- Dropout中，只有一部分子网络会被训练
+
+
+
+
+
+## 72. CNN中卷积层的计算细节
+
+> [CNN中卷积层的计算细节](https://zhuanlan.zhihu.com/p/29119239)
+>
+> [卷积神经网络的卷积核大小、个数，卷积层数如何确定呢？](https://yq.aliyun.com/articles/610509)
+>
+> [CNN卷积神经网络分析](https://www.jianshu.com/p/23029ebcef86)
+>
+> [卷积神经网络你需要知道的几个基本概念](https://www.imooc.com/article/23802)
+>
+> [经典模型-2：手把手带你分析、解读ResNet源代码](https://zhuanlan.zhihu.com/p/31502877)
+
+## **卷积层尺寸的计算原理**
+
+- **输入矩阵**格式：四个维度，依次为：样本数、图像高度、图像宽度、图像通道数
+
+- **输出矩阵**格式：与输出矩阵的维度顺序和含义相同，但是后三个维度（图像高度、图像宽度、图像通道数）的尺寸发生变化。
+
+- **权重矩阵**（卷积核）格式：同样是四个维度，但维度的含义与上面两者都不同，为：卷积核高度、卷积核宽度、输入通道数、输出通道数（卷积核个数）
+
+- **输入矩阵、权重矩阵、输出矩阵这三者之间的相互决定关系**
+
+- - 卷积核的输入通道数（in depth）由输入矩阵的通道数所决定。（红色标注）
+  - 输出矩阵的通道数（out depth）由卷积核的输出通道数所决定。（绿色标注）
+  - 输出矩阵的高度和宽度（height, width）这两个维度的尺寸由输入矩阵、卷积核、扫描方式所共同决定。计算公式如下。（蓝色标注）
+
+<img src="_asset/卷积层尺寸计算.svg">
 
 
 
@@ -1081,17 +1129,101 @@ GRU 只有两个门（update 和 reset），LSTM 有三个门（forget，input�
 
 
 
+## 73. 模型评估指标和方法
+
+> [机器学习-浅谈模型评估的方法和指标](https://juejin.im/entry/5b3b4254e51d45194a51e61a)
+>
+> [机器学习-浅谈模型评估的方法和指标](https://www.jianshu.com/p/498ea0d8017d) - 简书
+>
+> [机器学习模型性能评估方法笔记](https://blog.csdn.net/batuwuhanpei/article/details/51884351)
+>
+> [【深度学习】常用的模型评估指标](https://www.cnblogs.com/skyfsm/p/8467613.html)
+>
+> [机器学习模型的评价指标？](https://zhuanlan.zhihu.com/p/30153372) - 知乎（链接文章描述的不错）
+>
+> [机器学习模型的评估与选择](https://www.jianshu.com/p/d9b5674a1091) - 简书（图片比较清楚）
+>
+> [深度 | 机器学习中的模型评价、模型选择及算法选择***](https://blog.csdn.net/dqcfkyqdxym3f8rb0/article/details/79324352) - CSDN（非常不错的总结图文并茂）
+
+机器学习模型的评价指标：
+
+**分类**：
+
+- 精确率
+- 召回率
+- 准确率
+- F值
+- ROC-AUC 
+- 混淆矩阵
+- PRC
+
+**回归**：
+
+- RMSE(平方根误差)
+
+- MAE（平均绝对误差）
+
+- MSE(平均平方误差)
+
+**聚类**：
+
+- 兰德指数
+
+- 互信息
+
+- 轮廓系数
 
 
 
+## 74. 常用损失函数
+
+> [神经网络Loss损失函数总结](https://blog.csdn.net/willduan1/article/details/73694826) - CSDN
+> [机器学习常用损失函数](https://zhuanlan.zhihu.com/p/32847834) - 知乎
+>
+> [机器学习中常见的损失函数](https://blog.csdn.net/heyongluoyao8/article/details/52462400) - CSDN
+>
+> [机器学习中的目标函数、损失函数、代价函数有什么区别？](https://www.zhihu.com/question/52398145) - 知乎（以下内容参考链接）
+>
+> [机器学习：各类损失函数](https://lidongxuan.github.io/blog/ML-lossfunction) --（TODO 留着总结）
+>
+> [机器学习者都应该知道的五种损失函数！](https://segmentfault.com/a/1190000015320388) -- (TODO 留着总结)
+>
+> [各个模型的损失函数](https://www.jianshu.com/p/93c209ddb9b3) -- （损失函数的使用场景）
+>
+> [机器学习经典损失函数比较](https://blog.csdn.net/Leo_Xu06/article/details/79010218) -- （各个损失函数的优缺点）
+>
+> [如何有效设计机器学习损失函数?***](https://www.zhihu.com/question/68390722) - 知乎（实际工作中需要用到的技能）
 
 
 
+- 损失函数(Loss function)：是定义在**单个训练样本上的**，也就是就算一个样本的误差，比如我们想要分类，就是预测的类别和实际类别的区别，是一个样本的哦，用L表示
+
+- 代价函数(Cost function)：是定义在**整个训练集上面的**，也就是所有样本的误差的总和的平均，也就是损失函数的总和的平均，有没有这个平均其实不会影响最后的参数的求解结果。
 
 
 
+损失函数：是定义在单个样本上的，算的是一个样本的误差。
+
+代价函数：是定义在整个训练集上的，是所有样本误差的平均，也就是损失函数的平均。
+
+目标函数定义为：代价函数 + 正则化项。
 
 
 
+- 损失函数 ![\left| y_i-f(x_i) \right|](https://www.zhihu.com/equation?tex=%5Cleft%7C+y_i-f%28x_i%29+%5Cright%7C) ，一般是针对单个样本 i
+
+- 代价函数 ![1/N.\sum_{i=1}^{N}{\left| y_i-f(x_i) \right|}](https://www.zhihu.com/equation?tex=1%2FN.%5Csum_%7Bi%3D1%7D%5E%7BN%7D%7B%5Cleft%7C+y_i-f%28x_i%29+%5Cright%7C%7D) , 一般是针对总体
+
+- 目标函数 ![1/N.\sum_{i=1}^{N}{\left| y_i-f(x_i) \right|} + 正则化项](https://www.zhihu.com/equation?tex=1%2FN.%5Csum_%7Bi%3D1%7D%5E%7BN%7D%7B%5Cleft%7C+y_i-f%28x_i%29+%5Cright%7C%7D+%2B+%E6%AD%A3%E5%88%99%E5%8C%96%E9%A1%B9)
+
+PS: 在paper中，1.2.3的叫法并不严格,另外优化过程中涉及到求梯度，所以代价函数很多会做成差的平方和形式，没差，都是最小化y和output的差别。另外为了尽量避免过拟合或者一些特殊目的的constraint，还会在后面加上正则化项。以上只是最基本的loss，更多的loss根据任务的不同而变化多样。
 
 
+
+## 2018算法岗秋招让人发愁？这些面试问题你一定要知道！
+
+> [2018算法岗秋招让人发愁？这些面试问题你一定要知道！](https://zhuanlan.zhihu.com/p/43586216) - 知乎
+
+
+
+【牛客】链接：链接：https://pan.baidu.com/s/1KJyO7gYCoPBX1nKchy9F7w 密码： 密码：jN4Y
