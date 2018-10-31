@@ -1,3 +1,7 @@
+> 写在前边，本总结很多都是借鉴参考网上比较不错的blog和github，简单的做了一个汇总和部分知识点个人总结。整理过程中发现有些总结是错误的尽管还没有及时更正，后续会持续整理。再一个很多知识点总结的都是比较浅层次的，后续考虑分类为面试和知识点深度挖掘总结。欢迎 `Star` 或者 `Fork`
+
+> 由于时间原因总结的有些散乱。后续抽时间结构优化。
+
 # 机器学习算法地图
 
 <img src="./01-人工智能/_asset/机器学习算法地图.png">
@@ -7,13 +11,6 @@
 
 **GitHub** 地址：https://github.com/imhuay/CS_Interview_Notes-Chinese
 
-- :basketball: [<font size=+1>深度学习</font>](./github/Algorithm_Interview_Notes-Chinese/A-深度学习)
-- :hamburger: [<font size=+1>自然语言处理</font>](./github/Algorithm_Interview_Notes-Chinese/B-自然语言处理)
-- :fries: [<font size=+1>计算机视觉</font>](./github/Algorithm_Interview_Notes-Chinese/B-计算机视觉)
-- :cherries: [<font size=+1>数学</font>](./github/Algorithm_Interview_Notes-Chinese/C-数学)
-- :apple: [<font size=+1>算法</font>](./github/Algorithm_Interview_Notes-Chinese/C-算法)
-- :strawberry: [<font size=+1>编程语言</font>](./github/Algorithm_Interview_Notes-Chinese/C-编程语言)
-- :cookie: [<font size=+1>笔试面经</font>](./github/Algorithm_Interview_Notes-Chinese/D-笔试面经)
 
 <!--
 ## RoadMap
