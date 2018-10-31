@@ -1220,6 +1220,60 @@ PS: 在paper中，1.2.3的叫法并不严格,另外优化过程中涉及到求�
 
 
 
+## 74. 集成学习总结 & Stacking方法详解
+
+> [集成学习总结 & Stacking方法详解](https://blog.csdn.net/willduan1/article/details/73618677)
+>
+> [从Boosting到Stacking，概览集成学习的方法与性能](https://www.jiqizhixin.com/articles/2017-08-28-3)
+>
+> [Ensemble_learning 集成学习算法 stacking 算法](https://www.cnblogs.com/zhizhan/p/5051881.html)
+
+
+
+## 75. CTR预估算法之FM, FFM, DeepFM及实践
+
+> [CTR预估算法之FM, FFM, DeepFM及实践](https://blog.csdn.net/John_xyz/article/details/78933253) - CSDN
+>
+> [深入FFM原理与实践](https://tech.meituan.com/deep_understanding_of_ffm_principles_and_practices.html) - 美团技术团队
+>
+> [FM和FFM异同，及适用场景？](https://www.zhihu.com/question/269622387) - 知乎
+>
+> [除了LR，FM（FFM）方法，CTR预测还有那些方法，应用较为广泛？](https://www.zhihu.com/question/269622387) - 知乎
+
+
+
+## 76. 常见在线学习算法及应用场景
+
+> [论文学习：在线学习算法综述](https://blog.csdn.net/iyangdi/article/details/71544038) - CSDN
+>
+> [在线学习on-line learning和增量学习Incremental Learning区别？](https://www.zhihu.com/question/38713098) - 知乎
+>
+> [各大公司广泛使用的在线学习算法FTRL详解](https://www.cnblogs.com/EE-NovRain/p/3810737.html) - 博客园
+>
+> [在线学习（Online Learning）](https://www.cnblogs.com/jerrylead/archive/2011/04/18/2020173.html)
+>
+> [Bandit:一种简单而强大的在线学习算法](https://www.jianshu.com/p/0d74d56601af) - 简书
+
+
+
+
+
+## 77. 常见算法优缺点和应用场景
+
+> [几个常用算法的适应场景及其优缺点（非常好）](https://blog.csdn.net/u010159842/article/details/52918815)
+>
+> [各种机器学习的优缺点及应用场景](https://blog.csdn.net/SEUer_jeff/article/details/65629877)
+>
+> [机器学习常见算法分类汇总](http://blog.jobbole.com/77620/)
+>
+> [机器学习算法快速选择](https://www.jianshu.com/p/9e31c156b092) - 简书（不错的汇总） 
+>
+> [各种机器学习算法的应用场景分别是什么（比如朴素贝叶斯、决策树、K 近邻、SVM、逻辑回归最大熵模型）？](https://www.zhihu.com/question/26726794) - 知乎
+>
+>
+
+
+
 ## 2018算法岗秋招让人发愁？这些面试问题你一定要知道！
 
 > [2018算法岗秋招让人发愁？这些面试问题你一定要知道！](https://zhuanlan.zhihu.com/p/43586216) - 知乎
