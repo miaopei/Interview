@@ -80,3 +80,8 @@
 - [快速生成Github README.md的目录](http://blog.sciencenet.cn/blog-3247241-1104736.html)
 - [在线 LaTeX 编辑器](https://www.codecogs.com/latex/eqneditor.php)
 
+## Link
+
+- [神经网络与深度学习](https://nndl.github.io/)
+
+- [Matplotlib 用户指南](https://wizardforcel.gitbooks.io/matplotlib-user-guide/content/3.5.html)
