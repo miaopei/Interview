@@ -2360,6 +2360,10 @@ TCP 是一个基于字节流的传输服务（UDP 基于报文的），“流”
 
 </details>
 
+> [TCP和UDP详解](https://www.jianshu.com/p/335de1323ce9)
+>
+> [HTTP、TCP、UDP详解](https://www.jianshu.com/p/a5cf81b1a976)
+
 ### 应用层
 
 #### DNS
