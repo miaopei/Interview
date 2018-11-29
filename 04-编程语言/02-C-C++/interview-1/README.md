@@ -3206,19 +3206,34 @@ module cb
 - [浏览器中常见网络协议介绍](https://imququ.com/post/network-protocol-in-browser.html)
 - [WebRTC介绍及简单应用](https://cloud.tencent.com/developer/article/1007317)
 - [WebRTC架构简介](https://blog.csdn.net/fishmai/article/details/69681595)
-
 - [了不起的WebRTC：生态日趋完善，或将实时音视频技术白菜化](https://juejin.im/entry/5b14bd9ce51d450688134430)
+
+### Spark
+
+- [Apache Spark 中文文档](http://spark.apachecn.org/docs/cn/2.2.0/)
+- [Apache Spark 2.2.0 官方文档中文版（翻译完成 98%. 除 MLib 外） | ApacheCN](https://blog.csdn.net/u012185296/article/details/76855770)
+- [30分钟概览Spark分布式计算引擎](https://blog.csdn.net/xwc35047/article/details/60330528)
+
+
+
+### 加密安全问题
+
+- [SHA算法系列介绍](https://blog.csdn.net/wufaliang003/article/details/79782168)
+- [比特币背后的密码学原理](https://www.jianshu.com/p/225ff9439132)
+- [比特币的加密算法](https://blog.csdn.net/tiandiwuya/article/details/79571639)
+- [密码学大事件！ SHA-1 哈希碰撞实例](https://blog.csdn.net/linuxprobe2017/article/details/62049001)
+- [如何安全的存储用户的密码](https://www.freebuf.com/articles/web/28527.html)
+- [机器学习作用于信息安全的五大顶级案例](https://www.aqniu.com/learn/30238.html)
+- [机器学习和数据挖掘在网络安全领域会有哪些应用？](https://www.zhihu.com/question/50853891)
+- [机器学习正在安全领域挂起一阵小旋风，但这里面有BUG](https://www.leiphone.com/news/201609/fY4pztt4RQsrOqji.html)
 
 ### 其他
 
 - [终于有人把P2P、P2C、O2O、B2C、B2B、C2C 的区别讲透了！](https://news.mbalib.com/story/88506)
-
 - [如何真正让小程序,WebRTC和APP互通连麦直播](https://zhuanlan.zhihu.com/p/35066939)
-
 - [创业者必读：开发一款 App 到底需要多久？](https://36kr.com/p/5117575.html)
-
 - [如何开发一个app（Android）](https://www.jianshu.com/p/42c249168275)
-
 - [微信小程序开发教程--从零开始](https://www.jianshu.com/p/aaef5ceb3936)
-
+- [面向机器学习:数据平台的设计与搭建](https://zhuanlan.zhihu.com/p/39931551)
+- [基于Apache Spark以BigDL搭建可扩展的分布式深度学习框架](https://juejin.im/post/5b135482e51d4506dc0aaa14)
 - 
