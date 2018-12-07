@@ -3138,6 +3138,47 @@ module cb
 
 客户端首先通过同步方式调用服务端的接口 RegistCB，用来注册回调接口 CallBack。服务端收到该请求以后，就会保留该接口引用，如果发生某种事件需要向客户端通知的时候就通过该引用调用客户方的 OnEvent 函数，以便对方及时处理。
 
+## 野指针
+
+### 避免野指针的方法
+
+为了防止野指针带来的灾难，建议指针在定义时给一个初值，比如“NULL”，意思是不指向任何内存地址。然后再使用malloc函数给指针分配一块存储空间。
+
+<details><summary>避免野指针的方法</summary>
+
+```c++
+#include <stdio.h>
+#include <string.h>
+#include <malloc.h>
+
+int main()
+{
+    char *str1 = "123";
+    char *str2 = NULL; //str2 赋初值，不指向任何内存
+    
+    printf("str2的值是: %u\n", str2);
+    
+    str2 = (char *)malloc(10);
+    printf("str2被分配的地址是: %u\n", str2);
+    
+    strcpy(str2, str1);
+    
+    printf("str2指向的字符串是: %s\n", str2);
+    
+    if(NULL != str2)
+    {
+    	free(str2); // 主动释放分配给str2的内存
+    	str2 = NULL; // 让str2不指向任何内存    
+    }
+    
+    return 0;
+}
+```
+
+</details>
+
+
+
 ## 海量数据处理
 
 * [ 海量数据处理面试题集锦](http://blog.csdn.net/v_july_v/article/details/6685962)
