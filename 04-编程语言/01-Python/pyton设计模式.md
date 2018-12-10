@@ -616,7 +616,8 @@ if __name__ == '__main__':
 >
 > 当这个唯一实例应该是通过子类化可扩展的，并且客户应该无需更改代码就能使用一个扩展的实例时。
 
-<details><summary>单例模式code<summary>
+<details><summary>适配器模式code</summary>
+
 
 ```python
 #实现__new__方法
